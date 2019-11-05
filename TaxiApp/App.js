@@ -2,9 +2,6 @@
  * Capstone AOV
  */
 
- 
-
-
 import React from 'react';
 import {
   StyleSheet,
@@ -17,6 +14,8 @@ import MapView, {
   Polyline, 
   PROVIDER_GOOGLE
 } from "react-native-maps";
+
+import haversine from "haversine";
 
 const LATITUDE = 43.260909;
 const LONGITUDE = -79.919218;
@@ -45,15 +44,6 @@ const styles = StyleSheet.create({
   },
  });
 
- constructor(props) {
-   super(props);
-
-   this.state = {
-      latitude = latitude,
-      longitude = longitude,
-      error: null
-   };
- }
 
  export default () => (
   <View style={styles.container}>
@@ -61,12 +51,6 @@ const styles = StyleSheet.create({
       provider={PROVIDER_GOOGLE} // remove if not using Google Maps
       //style={styles.map}
       style={{ ...StyleSheet.absoluteFillObject }}
-      region={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-      }}
     >
     </MapView>
   </View>
