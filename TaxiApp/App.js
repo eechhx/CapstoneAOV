@@ -2,9 +2,6 @@
  * Capstone AOV
  */
 
- 
-
-
 import React from 'react';
 import {
   StyleSheet,
@@ -18,21 +15,64 @@ import MapView, {
   PROVIDER_GOOGLE
 } from "react-native-maps";
 
+import Geolocation from '@react-native-community/geolocation';
+
+
+//import haversine from "haversine";
+
 const LATITUDE = 43.260909;
 const LONGITUDE = -79.919218;
 const LATITUDE_DELTA = 0.09;
 const LONGITUDE_DELTA = 0.09;
 
-const App: () => React$Node = () => {
-  return (
-    <View style={styles.container}>
-    <MapView
-       provider={PROVIDER_GOOGLE}
-       style={{ ...StyleSheet.absoluteFillObject }}
-     />
-    </View>
-  );
-};
+
+class AnimatedMarkers extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
+      error: null
+    };
+  }
+
+  componentDidMount() {
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log(position);
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null
+      });
+    },
+    error => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
+    );
+  }
+  
+  getMapRegion = () => ({
+    latitude: this.state.latitude,
+    longitude: this.state.longitude,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA
+  });
+
+  render() {
+    return (
+      <View style = {styles.container}>
+        <MapView
+          style={styles.map}
+          provider={PROVIDER_GOOGLE} 
+          region = {this.getMapRegion()} >
+          <Marker coordinate = {this.getMapRegion()} />
+        </MapView>
+      </View>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -45,29 +85,5 @@ const styles = StyleSheet.create({
   },
  });
 
- constructor(props) {
-   super(props);
 
-   this.state = {
-      latitude = latitude,
-      longitude = longitude,
-      error: null
-   };
- }
-
- export default () => (
-  <View style={styles.container}>
-    <MapView
-      provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-      //style={styles.map}
-      style={{ ...StyleSheet.absoluteFillObject }}
-      region={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-      }}
-    >
-    </MapView>
-  </View>
-);
+export default AnimatedMarkers;
