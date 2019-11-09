@@ -16,7 +16,7 @@ import MapView, {
 } from "react-native-maps";
 
 import Geolocation from '@react-native-community/geolocation';
-
+import SearchBox from "./src/Search/index.js";
 
 //import haversine from "haversine";
 
@@ -91,8 +91,11 @@ class AnimatedMarkers extends React.Component {
           provider={PROVIDER_GOOGLE} 
           region = {this.getMapRegion()} >
           <Polyline coordinates = {this.state.routeCoordinates} strokeWidth={2} />
-          <Marker coordinate = {this.getMapRegion()} />
+          <MapView.Marker coordinate = {this.getMapRegion()}
+                          pinColor = "blue"/>
         </MapView>
+        <SearchBox/>
+
       </View>
     )
   }
