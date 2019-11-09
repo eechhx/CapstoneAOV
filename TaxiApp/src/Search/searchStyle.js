@@ -8,7 +8,7 @@ const styles = {
     },
     inputWrapper:{
         marginLeft:15,
-        marginRight:10,
+        marginRight:15,
         marginTop:10,
         marginBottom:0,
         backgroundColor:"#fff",

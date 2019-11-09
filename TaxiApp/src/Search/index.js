@@ -6,11 +6,19 @@ import styles from "./searchStyle.js";
 export const SearchBox = () => {
     return (
         <View style = {styles.searchBox}>
-            <Text style = {styles.label}>PICK UP</Text>
-            <InputGroup>
-                {/* <Icon name = "search" size = {15} color = "orange"/> */}
-                <Input style = {styles.inputSearch} placeholder = "Choose a pickup location!"/>
-            </InputGroup>
+            <View style = {styles.inputWrapper}>
+                <Text style = {styles.label}>PICK UP</Text>
+                <InputGroup>
+                    <Input style = {styles.inputSearch} placeholder = "Choose a pickup location!"/>
+                </InputGroup>
+            </View>
+
+            <View style = {styles.secondInputWrapper}>
+                <Text style = {styles.label}>DROP OFF</Text>
+                <InputGroup>
+                    <Input style = {styles.inputSearch} placeholder = "Choose a dropoff location!"/>
+                </InputGroup>
+            </View>
         </View>
     );
 };
