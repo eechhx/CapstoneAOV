@@ -16,7 +16,7 @@ import MapView, {
 } from "react-native-maps";
 
 import Geolocation from '@react-native-community/geolocation';
-
+import SearchBox from "./src/Search/index.js";
 
 //import haversine from "haversine";
 
@@ -34,7 +34,9 @@ class AnimatedMarkers extends React.Component {
     this.state = {
       latitude: LATITUDE,
       longitude: LONGITUDE,
-      error: null
+      error: null,
+      routeCoordinates: [],
+      distanceTravelled: 0
     };
   }
 
@@ -48,9 +50,30 @@ class AnimatedMarkers extends React.Component {
           error: null
       });
     },
+
     error => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
     );
+
+    this.watchID = Geolocation.watchPosition(
+      position => {
+        const {routeCoordinates} = this.state;
+        const {latitude, longitude} = position.coords;
+        const newCoordinate = {
+          latitude,
+          longitude
+        }
+        this.setState({
+          latitude,
+          longitude,
+          routeCoordinates: routeCoordinates.concat([newCoordinate])
+        });
+      },
+    );
+  }
+
+  componentWillUnmount() {
+    Geolocation.clearWatch(this.watchID);
   }
   
   getMapRegion = () => ({
@@ -67,8 +90,12 @@ class AnimatedMarkers extends React.Component {
           style={styles.map}
           provider={PROVIDER_GOOGLE} 
           region = {this.getMapRegion()} >
-          <Marker coordinate = {this.getMapRegion()} />
+          <Polyline coordinates = {this.state.routeCoordinates} strokeWidth={2} />
+          <MapView.Marker coordinate = {this.getMapRegion()}
+                          pinColor = "blue"/>
         </MapView>
+        <SearchBox/>
+
       </View>
     )
   }
