@@ -41,11 +41,9 @@ class AnimatedMarkers extends React.Component {
   }
 
   componentDidMount() {
-    fetch('./locations.json');
-
     Geolocation.getCurrentPosition(
       position => {
-        console.log(position);
+        //console.log(position);
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -82,6 +80,8 @@ class AnimatedMarkers extends React.Component {
   getMapRegion = () => ({
       latitude: this.state.latitude,
       longitude: this.state.longitude,
+      //latitude: SearchBox.latitude,
+      //longitude: SearchBox.longitude,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
   });

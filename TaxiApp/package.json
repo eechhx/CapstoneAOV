@@ -15,7 +15,6 @@
     "native-base": "^2.13.8",
     "react": "16.9.0",
     "react-native": "0.61.3",
-    "react-native-dropdown-menu": "^2.0.0",
     "react-native-maps": "^0.26.1"
   },
   "devDependencies": {

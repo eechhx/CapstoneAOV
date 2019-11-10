@@ -1,8 +1,8 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, Picker, Dimensions} from "react-native";
 import { View, InputGroup, Input } from "native-base";
 import styles from "./searchStyle.js";
-import DropdownMenu from 'react-native-dropdown-menu';
+
 
 const locations = require('../../locations.json')
 
@@ -14,50 +14,48 @@ export class SearchBox extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            latitude: null,
-            longitude: null,
-            name: null,
-        };
+    this.state = {
+      pickerSelection: 'Default value!',
+      pickerDisplayed: false,
+      latitude: null,
+      longitude: null
     }
-    
+  }
+
+  
+
     render() {
 
-        var names = []; 
-
-       for (var i = 0; i < locations.length; i++)
-        {
-            var obj = locations[i];
-            names.push(obj.name);
-        }
-
-        console.log(handler);
-
-        var data = [names];
         return (
-            <View style = {styles.searchBox}>
-                <View style={{height: 64}} />
-                
-                <DropdownMenu
-                style={{flex: 1}}
-                bgColor={'white'}
-                tintColor={'#666666'}
-                activityTintColor={'green'}
-
-                handler = {(selection) => this.setState({text: data[selection]})}
-                data = {data}
+        <View style = {styles.searchBox}>
+    
+            <Picker
+                selectedValue={this.state.pickerSelection}
+                style={{
+                    justifyContent: 'center', 
+                    borderColor: 'red', 
+                    height: 50, 
+                    top: 0,
+                    width: Dimensions.get('window').width,
+                    position: 'absolute'}}
+                onValueChange = {(itemValue, itemIndex) =>
+                this.setState({pickerSelection: itemValue})}
                 >
 
-                </DropdownMenu>
+                {/* PARSING JSON NAMES */}
+                {
+                    locations.map((item) =>{
+                    return(
+                    <Picker.Item  label = {item.name} value={item.name} key={item.name}/>
+                   );
+                 })
+                }
+            </Picker>
 
-                
+            
 
-                {/* <View style = {styles.inputWrapper}>
-                    <Text style = {styles.label}>PICK UP</Text>
-                    <InputGroup>
-                        <Input style = {styles.inputSearch} placeholder = "Choose a pickup location!"/>
-                    </InputGroup>
-                </View> */}
+            
+
 
                 {/* <View style = {styles.secondInputWrapper}>
                     <Text style = {styles.label}>DROP OFF</Text>
@@ -72,4 +70,5 @@ export class SearchBox extends React.Component {
     }
 };
 
-export default SearchBox;
+//export default SearchBox;
+module.exports = SearchBox
