@@ -1,0 +1,37 @@
+[
+    {
+    "name": "Burke Science Building",
+    "coords": {
+    "latitude": 43.262045,
+    "longitude": 79.9201704
+    }
+},
+    {
+    "name": "John Hodgins Engineering Building",
+    "coords": {
+    "latitude": 43.260593,
+    "longitude": -79.920422
+    }
+},
+    {
+    "name": "McMaster's Children Hospital",
+    "coords": {
+    "latitude": 43.259400,
+    "longitude": -79.917515
+    }
+},
+    {
+    "name": "Michael G. DeGroote Centre for Learning and Discovery",
+    "coords": {
+    "latitude": 43.261142,
+    "longitude": -79.916797
+    }
+},
+    {
+    "name": "L.R. Wilson",
+    "coords": {
+        "latitude": 43.262211,
+        "longitude": 106.699417
+    }
+}
+]

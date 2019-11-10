@@ -41,6 +41,8 @@ class AnimatedMarkers extends React.Component {
   }
 
   componentDidMount() {
+    fetch('./locations.json');
+
     Geolocation.getCurrentPosition(
       position => {
         console.log(position);
@@ -75,12 +77,13 @@ class AnimatedMarkers extends React.Component {
   componentWillUnmount() {
     Geolocation.clearWatch(this.watchID);
   }
-  
+
+    
   getMapRegion = () => ({
-    latitude: this.state.latitude,
-    longitude: this.state.longitude,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
   });
 
   render() {
@@ -89,8 +92,11 @@ class AnimatedMarkers extends React.Component {
         <MapView
           style={styles.map}
           provider={PROVIDER_GOOGLE} 
-          region = {this.getMapRegion()} >
+          region = {this.getMapRegion()} 
+          showsMyLocationButton = {true}>
+
           <Polyline coordinates = {this.state.routeCoordinates} strokeWidth={2} />
+          
           <MapView.Marker coordinate = {this.getMapRegion()}
                           pinColor = "blue"/>
         </MapView>
