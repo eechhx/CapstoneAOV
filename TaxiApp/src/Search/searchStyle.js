@@ -33,6 +33,12 @@ const styles = {
         marginTop:10,
         marginBottom:0,
         backgroundColor:"white"
+    },
+    container: {
+        top: -150,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 };
 

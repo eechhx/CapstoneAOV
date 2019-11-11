@@ -18,6 +18,8 @@ import MapView, {
 import Geolocation from '@react-native-community/geolocation';
 import SearchBox from "./src/Search/index.js";
 
+// var box = require('./src/Search/index.js');
+
 //import haversine from "haversine";
 
 const LATITUDE = 43.260909;
@@ -26,7 +28,7 @@ const LATITUDE_DELTA = 0.09;
 const LONGITUDE_DELTA = 0.09;
 
 
-class AnimatedMarkers extends React.Component {
+export class AnimatedMarkers extends React.Component {
 
   constructor(props) {
     super(props);
@@ -34,64 +36,67 @@ class AnimatedMarkers extends React.Component {
     this.state = {
       latitude: LATITUDE,
       longitude: LONGITUDE,
+      //latitude: SearchBox.latitude,
+      //longitude: SearchBox.longitude,
       error: null,
       routeCoordinates: [],
       distanceTravelled: 0
     };
   }
 
-  componentDidMount() {
-    Geolocation.getCurrentPosition(
-      position => {
-        //console.log(position);
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          error: null
-      });
-    },
+  // componentDidMount() {
+  //   Geolocation.getCurrentPosition(
+  //     position => {
+  //       console.log(SearchBox.latitude);
+  //       this.setState({
+  //         latitude: position.coords.latitude,
+  //         longitude: position.coords.longitude,
+  //         //latitude: SearchBox.latitude,
+  //         //longitude: SearchBox.longitude,
+  //         error: null
+  //     });
+  //   },
 
-    error => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
-    );
+  //   error => this.setState({ error: error.message }),
+  //     { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
+  //   );
 
-    this.watchID = Geolocation.watchPosition(
-      position => {
-        const {routeCoordinates} = this.state;
-        const {latitude, longitude} = position.coords;
-        const newCoordinate = {
-          latitude,
-          longitude
-        }
-        this.setState({
-          latitude,
-          longitude,
-          routeCoordinates: routeCoordinates.concat([newCoordinate])
-        });
-      },
-    );
-  }
+  //   this.watchID = Geolocation.watchPosition(
+  //     position => {
+  //       const {routeCoordinates} = this.state;
+  //       const {latitude, longitude} = position.coords;
+  //       const newCoordinate = {
+  //         latitude,
+  //         longitude
+  //       }
+  //       this.setState({
+  //         latitude,
+  //         longitude,
+  //         routeCoordinates: routeCoordinates.concat([newCoordinate])
+  //       });
+  //     },
+  //   );
+  // }
 
-  componentWillUnmount() {
-    Geolocation.clearWatch(this.watchID);
-  }
+  // componentWillUnmount() {
+  //   Geolocation.clearWatch(this.watchID);
+  // }
 
-    
-  getMapRegion = () => ({
-      latitude: this.state.latitude,
-      longitude: this.state.longitude,
-      //latitude: SearchBox.latitude,
-      //longitude: SearchBox.longitude,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA
-  });
+  // getMapRegion = () => ({
+  //     latitude: this.state.latitude,
+  //     longitude: this.state.longitude,
+  //     latitudeDelta: LATITUDE_DELTA,
+  //     longitudeDelta: LONGITUDE_DELTA
+  // });
 
   render() {
+
+    console.log("hello" + SearchBox.latitude);
     return (
       <View style = {styles.container}>
-        <MapView
-          style={styles.map}
-          provider={PROVIDER_GOOGLE} 
+        {/* <MapView
+          style = {styles.map}
+          provider = {PROVIDER_GOOGLE} 
           region = {this.getMapRegion()} 
           showsMyLocationButton = {true}>
 
@@ -99,7 +104,17 @@ class AnimatedMarkers extends React.Component {
           
           <MapView.Marker coordinate = {this.getMapRegion()}
                           pinColor = "blue"/>
-        </MapView>
+        </MapView> */}
+          <MapView
+          style = {styles.map}
+          provider = {PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: SearchBox.latitude,
+              longitude: SearchBox.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
         <SearchBox/>
 
       </View>
