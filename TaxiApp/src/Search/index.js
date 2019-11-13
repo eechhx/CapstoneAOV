@@ -3,13 +3,17 @@ import { Text, Picker, Dimensions, Modal, Button, TouchableHighlight} from "reac
 import { View, InputGroup, Input } from "native-base";
 import styles from "./searchStyle.js";
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { selectDestination } from '../../redux/actions/index';
+
 
 const locations = require('../../locations.json')
 
 //import * as data from '../../locations.json';
 
 
-export class SearchBox extends React.Component {
+class SearchBox extends React.Component {
 
     constructor(props) {
         super(props);
@@ -22,12 +26,16 @@ export class SearchBox extends React.Component {
         }   
     }
 
-    setPickerValue(newLocation) {
-        this.setState({
-            pickerSelection: newLocation.name,
-            latitude: newLocation.coords.latitude,
-            longitude: newLocation.coords.longitude
-        })
+    setPickerValue(destination) {
+        // this.setState({
+        //     pickerSelection: newLocation.name,
+        //     latitude: newLocation.coords.latitude,
+        //     longitude: newLocation.coords.longitude
+        // })
+
+        //const destination = event.target.value;
+		console.log(destination.title);
+		this.props.selectDestination(destination.title);
 
         this.togglePicker();
     }
@@ -40,31 +48,12 @@ export class SearchBox extends React.Component {
 
     render() {
         console.log(this.state.latitude, this.state.longitude);
+
         return (
         <View style = {styles.container}>
             <Text>Please select a location { this.state.pickerSelection }</Text>
-            <Button onPress={() => this.togglePicker()} title={ "Select a value!" } />
-            {/* <Picker
-                selectedValue={this.state.pickerSelection}
-                style={{
-                    justifyContent: 'center', 
-                    borderColor: 'red', 
-                    height: 50, 
-                    width: Dimensions.get('window').width,
-                    position: 'absolute'}}
-                onValueChange = {(itemValue, itemIndex) =>
-                this.setState({pickerSelection: itemValue})}
-                >
 
-                 PARSING JSON NAMES 
-                {
-                    locations.map((item) =>{
-                    return(
-                    <Picker.Item  label = {item.name} value={item.name} key={item.name}/>
-                   );
-                 })
-                }
-            </Picker> */}
+            <Button onPress={() => this.togglePicker()} title={ "Select a value!" } />
 
             <Modal visible = {this.state.pickerDisplayed} animationType = {"slide"} transparent = {true}>
                 <View style = {{ margin: 20, padding: 20,
@@ -75,9 +64,20 @@ export class SearchBox extends React.Component {
                     alignItems: 'center',
                     position: 'absolute' }}>
                     <Text style = {{fontSize: 20, fontWeight: 'bold'}}> Select Location  </Text>
-                    { locations.map((item) => {
+
+                    {/* { locations.map((item) => {
                     return <TouchableHighlight key = {item.name}  onPress = { () => this.setPickerValue(item)} style={{ paddingTop: 4, paddingBottom: 4 }}>
                         <Text>{ item.name }</Text>
+                        </TouchableHighlight>
+                    })} */}
+
+                    { 
+                    Object.keys(this.props.destination).map((key) => {
+                    const destination = this.props.destination[key];
+                    return  <TouchableHighlight key = {key} onPress = { () => this.setPickerValue(destination)} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                        <Text key={key} value={key}>
+                            {destination.title}
+                        </Text> 
                         </TouchableHighlight>
                     })}
 
@@ -100,7 +100,18 @@ export class SearchBox extends React.Component {
             </View>
         );
     }
+
+
 };
 
-//export default SearchBox;
-module.exports = SearchBox;
+function mapStateToProps(state) {
+	return {
+		destination: state.destination
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({ selectDestination: selectDestination }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBox);
