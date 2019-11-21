@@ -19,7 +19,7 @@ class SearchBox extends React.Component {
         super(props);
 
         this.state = {
-        pickerSelection: 'Default value!',
+        pickerSelection: 'No Location Selected',
         pickerDisplayed: false,
         latitude: null,
         longitude: null
@@ -35,7 +35,12 @@ class SearchBox extends React.Component {
 
         //const destination = event.target.value;
 		console.log(destination.title);
+        console.log("hello" + destination.latitude);
 		this.props.selectDestination(destination.title);
+
+        this.setState({
+            pickerSelection: destination.title
+        })
 
         this.togglePicker();
     }
@@ -51,9 +56,9 @@ class SearchBox extends React.Component {
 
         return (
         <View style = {styles.container}>
-            <Text>Please select a location { this.state.pickerSelection }</Text>
+            <Text>Selected Location:  { this.state.pickerSelection }</Text>
 
-            <Button onPress={() => this.togglePicker()} title={ "Select a value!" } />
+            <Button onPress={() => this.togglePicker()} title={ "Select a location!" } />
 
             <Modal visible = {this.state.pickerDisplayed} animationType = {"slide"} transparent = {true}>
                 <View style = {{ margin: 20, padding: 20,

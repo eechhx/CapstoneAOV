@@ -88,7 +88,7 @@ class AnimatedMarkers extends React.Component {
   });
   
   componentDidUpdate() {
-    console.log("hello " +  this.props.destination.latitude);
+    console.log("Lat: " +  this.props.destination.latitude + " Long: " + this.props.destination.longitude);
 
     this.markerLocation()
     }

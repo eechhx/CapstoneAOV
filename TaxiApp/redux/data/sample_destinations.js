@@ -1,17 +1,17 @@
 export const destination = {
-	'Location 1': {
-		name: 'Location 1',
-		latitude: 43.23001820897642,
-		longitude: -79.92338224779816
+	'Burke Science Building': {
+		name: 'Burke Science Building',
+		latitude: 43.262196,
+		longitude: -79.920210
 	},
-	'Location 2': {
-		name: 'Location 2',
-		latitude: 43.2322859,
-		longitude: -79.9304523
+	'John Hodgins Engineering Building': {
+		name: 'John Hodgins Engineering Building',
+		latitude: 43.260593,
+		longitude: -79.920422
 	},
-	'Location 3': {
-		name: 'Location 3',
-		latitude: 43.23385434772542,
-		longitude: -79.92101456969976
+	'McMaster Children Hospital': {
+		name: 'McMaster Children Hospital',
+		latitude: 43.259400,
+		longitude: -79.917515
 	}
 };
