@@ -90,14 +90,15 @@ class AnimatedMarkers extends React.Component {
   componentDidUpdate() {
     console.log("Lat: " +  this.props.destination.latitude + " Long: " + this.props.destination.longitude);
 
-    this.markerLocation()
+    // this.markerLocation()
     }
 
     markerLocation() {
 		return (
-			{latitude: this.props.destination.latitude, longitude: this.props.destination}
+			{latitude: this.props.destination.latitude, longitude: this.props.destination.longitude}
 		);
 	}
+  
   render() {
     let marker;
 
@@ -117,8 +118,8 @@ class AnimatedMarkers extends React.Component {
           <MapView.Marker coordinate = {this.getMapRegion()}
                           pinColor = "blue"/>
         </MapView> */}
-          <MapView
-         style = {styles.map}
+        <MapView
+          style = {styles.map}
           provider = {PROVIDER_GOOGLE}
             initialRegion={{
               latitude: this.state.latitude,
@@ -127,9 +128,12 @@ class AnimatedMarkers extends React.Component {
               longitudeDelta: 0.0421,
             }}
           >
-          {marker}
+
+          {marker} 
 
           <MapView.Marker coordinate = {this.getMapRegion()} />
+
+          {/* <Polyline coordinates = {this.markerLocation()} strokeWidth = {2} /> */}
           </MapView>
           
         <SearchBox/>
