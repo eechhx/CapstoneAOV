@@ -49,8 +49,6 @@ class AnimatedMarkers extends React.Component {
   //       this.setState({
   //         latitude: position.coords.latitude,
   //         longitude: position.coords.longitude,
-  //         //latitude: SearchBox.latitude,
-  //         //longitude: SearchBox.longitude,
   //         error: null
   //     });
   //   },
@@ -79,6 +77,43 @@ class AnimatedMarkers extends React.Component {
   // componentWillUnmount() {
   //   Geolocation.clearWatch(this.watchID);
   // }
+
+  mergeCoords = () => {
+    const {
+      latitude,
+      longitude,
+      desLatitude,
+      desLongitude 
+    } = this.state 
+
+    const hasStartAndEnd = latitude != null && desLatitude != null
+
+    if (hasStartAndEnd) {
+      const concatStart = `${latitude},${longitude}`
+      const concatEnd = `${deslatitude},${desLongitude}`
+      this.getDirections(concatStart, concatEnd)
+    }
+  }
+
+  async getDirections(startLoc, desLoc) {
+    try {
+      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${desLoc}&key=${AIzaSyCeojUCswu3iZbACDedukhHBTJ7PDVU6Ak}&mode=${mode}`)
+      const respJson = await resp.json();
+      const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      const coords = points.map(point => {
+        return {
+          latitude: point[0],
+          longitude: point[1]
+        }
+      })
+      this.setState( {coords} )
+      } 
+      catch(error) {
+        console.log('Error: ', error)
+      }
+  }
+
+
 
   getMapRegion = () => ({
       latitude: this.state.latitude,
