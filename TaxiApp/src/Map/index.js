@@ -7,10 +7,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import MapView, {
   Marker,
   AnimatedRegion,
-  Polyline, 
   PROVIDER_GOOGLE,
-  withGoogleMap
+  withGoogleMap,
+  DirectionsRenderer,
 } from "react-native-maps";
+
+import Polyline from '@mapbox/polyline'
 
 import Geolocation from '@react-native-community/geolocation';
 import SearchBox from "../Search/index.js";
@@ -38,45 +40,52 @@ class AnimatedMarkers extends React.Component {
       longitude: LONGITUDE,
       error: null,
       routeCoordinates: [],
-      distanceTravelled: 0
+      coords: []
+      //distanceTravelled: 0
     };
   }
 
-  // componentDidMount() {
-  //   Geolocation.getCurrentPosition(
-  //     position => {
-  //       console.log(SearchBox.latitude);
-  //       this.setState({
-  //         latitude: position.coords.latitude,
-  //         longitude: position.coords.longitude,
-  //         error: null
-  //     });
-  //   },
+  componentDidMount() {
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log(SearchBox.latitude);
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null
+      });
+    },
 
-  //   error => this.setState({ error: error.message }),
-  //     { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
-  //   );
+    error => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
+    );
 
-  //   this.watchID = Geolocation.watchPosition(
-  //     position => {
-  //       const {routeCoordinates} = this.state;
-  //       const {latitude, longitude} = position.coords;
-  //       const newCoordinate = {
-  //         latitude,
-  //         longitude
-  //       }
-  //       this.setState({
-  //         latitude,
-  //         longitude,
-  //         routeCoordinates: routeCoordinates.concat([newCoordinate])
-  //       });
-  //     },
-  //   );
-  // }
+    this.watchID = Geolocation.watchPosition(
+      position => {
+        const {routeCoordinates} = this.state;
+        const {latitude, longitude} = position.coords;
+        const newCoordinate = {
+          latitude,
+          longitude
+        }
+        this.setState({
+          latitude,
+          longitude,
+          routeCoordinates: routeCoordinates.concat([newCoordinate])
+        });
+      },
+    );
+  }
 
-  // componentWillUnmount() {
-  //   Geolocation.clearWatch(this.watchID);
-  // }
+  //  watchID =  Geolocation.getCurrentPosition (
+  //     ({ coords: { latitude, longitude } }) => this.setState({ latitude, longitude }, this.mergeCoords),
+  //     (error) => console.log('Error:', error)
+  //   )
+    
+
+  componentWillUnmount() {
+    Geolocation.clearWatch(this.watchID);
+  }
 
   mergeCoords = () => {
     const {
@@ -90,26 +99,31 @@ class AnimatedMarkers extends React.Component {
 
     if (hasStartAndEnd) {
       const concatStart = `${latitude},${longitude}`
-      const concatEnd = `${deslatitude},${desLongitude}`
+      const concatEnd = `${this.props.destination.latitude},${this.props.destination.longitude}`
       this.getDirections(concatStart, concatEnd)
+      console.log("INSIDE MERGE" + concatEnd)
     }
+  console.log("flag here")
+    
   }
 
   async getDirections(startLoc, desLoc) {
     try {
-      const resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${desLoc}&key=${AIzaSyCeojUCswu3iZbACDedukhHBTJ7PDVU6Ak}&mode=${mode}`)
-      const respJson = await resp.json();
-      const points = Polyline.decode(respJson.routes[0].overview_polyline.points);
-      const coords = points.map(point => {
+      let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${desLoc}&key=AIzaSyCeojUCswu3iZbACDedukhHBTJ7PDVU6Ak&mode=bicycling`)
+      let respJson = await resp.json();
+      let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
+      let coords = points.map((point,index) => {
         return {
           latitude: point[0],
           longitude: point[1]
         }
       })
+      console.log("JKFL:SAFJKLA:SFJKLA:")
       this.setState( {coords} )
+      return coords
       } 
       catch(error) {
-        console.log('Error: ', error)
+        console.log('Errorrrr: ', error)
       }
   }
 
@@ -123,22 +137,62 @@ class AnimatedMarkers extends React.Component {
   });
   
   componentDidUpdate() {
-    console.log("Lat: " +  this.props.destination.latitude + " Long: " + this.props.destination.longitude);
-
+    // console.log("Lat: " +  this.props.destination.latitude + " Long: " + this.props.destination.longitude);
     // this.markerLocation()
-    }
 
-    markerLocation() {
+    // const DirectionsService = new google.maps.DirectionsService();
+
+		// DirectionsService.route(
+		// 	{
+		// 		origin: { lat: this.state.latitude, lng: this.state.longitude },
+		// 		destination: { lat: this.props.destination.latitude, lng: this.props.destination.longitude },
+		// 		travelMode: google.maps.TravelMode.DRIVING
+		// 	},
+		// 	(result, status) => {
+		// 		if (status === google.maps.DirectionsStatus.OK) {
+		// 			this.setState({
+		// 				directions: result
+		// 			});
+    //       console.log("RESULTS HERE:" + result)
+
+		// 		} else {
+		// 			console.error(`error fetching directions ${result}`);
+		// 		}
+		// 	}
+		// );
+
+  }
+
+  markerLocation() {
 		return (
 			{latitude: this.props.destination.latitude, longitude: this.props.destination.longitude}
 		);
 	}
+
+  onMarkerPress = destination => () => {
+    //const { coords : { latitude, longitude } } = destination
+    console.log("INSIDE ON MARKER PRESS!:J") 
+    this.setState({
+      //destination: location,
+      desLatitude: this.props.destination.latitude,
+      desLongitude: this.props.destination.longitude
+    }, this.mergeCoords)
+
+    console.log("DESLATITUDE:" + this.state.desLatitude )
+    console.log("THIS.PROPS.DESTINATION.LAT: " + this.props.destination.latitude)
+  };
   
   render() {
+  
     let marker;
 
+    //console.log("HELLO" + coords);
+
     if (this.props.destination){    
-        marker = <MapView.Marker coordinate = {{latitude: this.props.destination.latitude, longitude: this.props.destination.longitude}} pinColor = "blue"/>
+        marker = <MapView.Marker coordinate = {{latitude: this.props.destination.latitude, longitude: this.props.destination.longitude}} pinColor = "blue" />
+        //this.onMarkerPress(this.props.destination)
+        console.log("HELLJKL:")
+
     }
     return (
       <View style = {styles.container}>
@@ -154,6 +208,7 @@ class AnimatedMarkers extends React.Component {
                           pinColor = "blue"/>
         </MapView> */}
         <MapView
+          showsUserLocation
           style = {styles.map}
           provider = {PROVIDER_GOOGLE}
             initialRegion={{
@@ -166,9 +221,19 @@ class AnimatedMarkers extends React.Component {
 
           {marker} 
 
-          <MapView.Marker coordinate = {this.getMapRegion()} />
+             <Marker
+                coordinate={{latitude: this.state.latitude,
+                              longitude: this.state.longitude}}
+                onPress={this.onMarkerPress(this.props.destination)}/>
 
-          {/* <Polyline coordinates = {this.markerLocation()} strokeWidth = {2} /> */}
+          <MapView.Polyline 
+            strokeWidth = {2}
+            strokeColor = 'red'
+            coordinates = {this.state.coords}
+          />
+
+
+          {/* <MapView.Marker coordinate = {this.getMapRegion()} /> */}
           </MapView>
           
         <SearchBox/>
