@@ -3,7 +3,13 @@
  */
 
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { 
+  StyleSheet, 
+  Text, 
+  View, 
+  Button,
+  TouchableOpacity
+} from 'react-native';
 import MapView, {
   Marker,
   AnimatedRegion,
@@ -69,6 +75,7 @@ class AnimatedMarkers extends React.Component {
           longitude
         }
         this.setState({
+          
           latitude,
           longitude,
           routeCoordinates: routeCoordinates.concat([newCoordinate])
@@ -169,32 +176,34 @@ class AnimatedMarkers extends React.Component {
 		);
 	}
 
-  onMarkerPress = destination => () => {
+  onButtonPress = () => {
     //const { coords : { latitude, longitude } } = destination
-    console.log("INSIDE ON MARKER PRESS!:J") 
+    //console.log("INSIDE ON MARKER PRESS!:J") 
     this.setState({
       //destination: location,
       desLatitude: this.props.destination.latitude,
       desLongitude: this.props.destination.longitude
     }, this.mergeCoords)
 
-    console.log("DESLATITUDE:" + this.state.desLatitude )
-    console.log("THIS.PROPS.DESTINATION.LAT: " + this.props.destination.latitude)
+    //console.log("DESLATITUDE:" + this.state.desLatitude )
+    //console.log("THIS.PROPS.DESTINATION.LAT: " + this.props.destination.latitude)
   };
   
   render() {
   
     let marker;
+    var buttonShow = true;
 
     //console.log("HELLO" + coords);
 
     if (this.props.destination){    
         marker = <MapView.Marker coordinate = {{latitude: this.props.destination.latitude, longitude: this.props.destination.longitude}} pinColor = "blue" />
         //this.onMarkerPress(this.props.destination)
+        buttonShow = false;
         console.log("HELLJKL:")
-
     }
     return (
+      <React.Fragment>
       <View style = {styles.container}>
         {/* <MapView
           style = {styles.map}
@@ -219,26 +228,30 @@ class AnimatedMarkers extends React.Component {
             }}
           >
 
-          {marker} 
+        {marker} 
 
-             <Marker
-                coordinate={{latitude: this.state.latitude,
-                              longitude: this.state.longitude}}
-                onPress={this.onMarkerPress(this.props.destination)}/>
+        <MapView.Polyline 
+          strokeWidth = {2}
+          strokeColor = 'red'
+          coordinates = {this.state.coords}
+        />
 
-          <MapView.Polyline 
-            strokeWidth = {2}
-            strokeColor = 'red'
-            coordinates = {this.state.coords}
-          />
-
-
-          {/* <MapView.Marker coordinate = {this.getMapRegion()} /> */}
-          </MapView>
-          
+        </MapView>
+        
         <SearchBox/>
 
+        <View style = {styles.button}>
+          <TouchableOpacity disabled = {true}>
+            <Button 
+              style = {styles.button}  
+              onPress = {this.onButtonPress}
+              title = 'Confirm Location'
+              color = 'blue'
+            />
+          </TouchableOpacity>
+        </View>
       </View>
+    </React.Fragment>
     )
   }
 }
@@ -257,6 +270,10 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  button: {
+    backgroundColor: 'yellow',
+    position: "relative"
   },
  });
 
