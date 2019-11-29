@@ -192,15 +192,13 @@ class AnimatedMarkers extends React.Component {
   render() {
   
     let marker;
-    var buttonShow = true;
+    var buttonShow = false;
 
     //console.log("HELLO" + coords);
 
     if (this.props.destination){    
         marker = <MapView.Marker coordinate = {{latitude: this.props.destination.latitude, longitude: this.props.destination.longitude}} pinColor = "blue" />
-        //this.onMarkerPress(this.props.destination)
-        buttonShow = false;
-        console.log("HELLJKL:")
+        buttonShow = true;
     }
     return (
       <React.Fragment>
@@ -239,17 +237,18 @@ class AnimatedMarkers extends React.Component {
         </MapView>
         
         <SearchBox/>
-
-        <View style = {styles.button}>
-          <TouchableOpacity disabled = {true}>
-            <Button 
-              style = {styles.button}  
+   
+        {this.props.destination ? 
+          <View style = {styles.button}>
+          <TouchableOpacity>
+            <Button
               onPress = {this.onButtonPress}
               title = 'Confirm Location'
               color = 'blue'
             />
           </TouchableOpacity>
-        </View>
+          </View>:null
+        }
       </View>
     </React.Fragment>
     )
@@ -272,6 +271,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   button: {
+    top: -90,
     backgroundColor: 'yellow',
     position: "relative"
   },

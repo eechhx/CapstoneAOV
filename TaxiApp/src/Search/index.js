@@ -56,7 +56,7 @@ class SearchBox extends React.Component {
 
         return (
         <View style = {styles.container}>
-            <Text>Selected Location:  { this.state.pickerSelection }</Text>
+            <Text style = {styles.menuText}>Selected Location:</Text><Text style = {styles.selectedText}> { this.state.pickerSelection }</Text>
 
             <Button onPress={() => this.togglePicker()} title={ "Select a location!" } />
 
@@ -92,16 +92,6 @@ class SearchBox extends React.Component {
                     </TouchableHighlight>
                 </View>
             </Modal>
-            
-
-                {/* <View style = {styles.secondInputWrapper}>
-                    <Text style = {styles.label}>DROP OFF</Text>
-                    <InputGroup>
-                        <Input style = {styles.inputSearch} placeholder = "Choose a dropoff location!"/>
-                    </InputGroup>
-                </View> */}
-
-
             </View>
         );
     }
