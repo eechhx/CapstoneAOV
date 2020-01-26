@@ -59,7 +59,7 @@ def set_tick(desired_ticks):
 
     try:
         if(desired_ticks > current_tick):
-            time.sleep(0.01)            #add delay  
+            time.sleep(0.01)            #add delay for pcb communication time
             steeringMotor.requestTickVelocity(-1000)
             time.sleep(0.01)
             while(desired_ticks > steeringMotor.currentEncoderTicks()):
